@@ -1,4 +1,4 @@
-export interface Transaction {
+export interface NumscriptTransaction {
   asset: string
   amount: number | 'ALL_AVAILABLE'
   source: Array<{

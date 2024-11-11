@@ -5,9 +5,10 @@ import {
   resolveDestination,
   resolveSource,
 } from './resolvers'
-import { Transaction } from './types'
+import { NumscriptTransaction } from './types'
+export { NumscriptTransaction } from './types'
 
-export const generateNumscript = (tx: Transaction) => {
+export const generateNumscript = (tx: NumscriptTransaction) => {
   const amount = `${tx.asset} ${tx.amount === 'ALL_AVAILABLE' ? '*' : tx.amount}`
 
   return [

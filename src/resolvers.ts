@@ -1,7 +1,7 @@
-import { Transaction } from './types'
+import { NumscriptTransaction } from './types'
 
 export const formatAccount = (
-  source: Transaction['source'][0],
+  source: NumscriptTransaction['source'][0],
   asset: string
 ) => {
   if (source.maxValue !== undefined) {
@@ -27,7 +27,7 @@ export const formatAccount = (
   return `@${source.account}`
 }
 
-export const resolveSource = (tx: Transaction) => {
+export const resolveSource = (tx: NumscriptTransaction) => {
   if (tx.source.length === 1) {
     return formatAccount(tx.source[0], tx.asset)
   }
@@ -35,7 +35,7 @@ export const resolveSource = (tx: Transaction) => {
   return `{\n ${tx.source.map((s) => '   ' + formatAccount(s, tx.asset)).join('\n ')}\n  }`
 }
 
-export const resolveDestination = (tx: Transaction) => {
+export const resolveDestination = (tx: NumscriptTransaction) => {
   if (tx.destination.length === 1) {
     return `@${tx.destination[0].account}`
   }
@@ -49,7 +49,7 @@ export const resolveDestination = (tx: Transaction) => {
     .join('\n    ')}\n  }`
 }
 
-export const resolveSaveStatement = (tx: Transaction) => {
+export const resolveSaveStatement = (tx: NumscriptTransaction) => {
   return (
     tx.save
       ?.map(
@@ -60,7 +60,7 @@ export const resolveSaveStatement = (tx: Transaction) => {
   )
 }
 
-export const resolveTxMeta = (tx: Transaction) => {
+export const resolveTxMeta = (tx: NumscriptTransaction) => {
   return tx.txMeta
     ? Object.entries(tx.txMeta)
         .map(([key, value]) => `set_tx_meta("${key}", "${value}")`)
@@ -68,7 +68,7 @@ export const resolveTxMeta = (tx: Transaction) => {
     : ''
 }
 
-export const resolveAccountMeta = (tx: Transaction) => {
+export const resolveAccountMeta = (tx: NumscriptTransaction) => {
   return tx.accountMeta
     ? Object.entries(tx.accountMeta)
         .flatMap(([account, meta]) =>

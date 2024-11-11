@@ -2,7 +2,8 @@
   "name": "formance-numscript-generator",
   "version": "0.0.3",
   "description": "Numscript generator for Formance open source ledger",
-  "main": "dist/src/index.js",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
