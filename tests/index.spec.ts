@@ -1,5 +1,5 @@
 import { generateNumscript } from '../src'
-import { readFile, writeFile } from 'fs/promises'
+import { readFile } from 'fs/promises'
 
 describe('Formance Numscript Generator', () => {
   test('Transfer with limited overdraft', async () => {
@@ -14,8 +14,6 @@ describe('Formance Numscript Generator', () => {
       destination: [{ account: '@bar' }],
       txMeta: { test: 'Transfer with limited overdraft' },
     })
-
-    await writeFile('./tests/out/limited-overdraft.txt', script)
 
     expect(script.trim()).toEqual(file.trim())
   })
@@ -39,11 +37,6 @@ describe('Formance Numscript Generator', () => {
       accountMeta: { '@users:001:wallet': { limit: 'low' } },
     })
 
-    await writeFile(
-      'tests/out/multiple-sources-with-max-allocation.txt',
-      script
-    )
-
     expect(script.trim()).toEqual(file.trim())
   })
 
@@ -61,8 +54,6 @@ describe('Formance Numscript Generator', () => {
       accountMeta: { '@users:001:wallet': { limit: 'high' } },
     })
 
-    await writeFile('tests/out/multiple-sources.txt', script)
-
     expect(script.trim()).toEqual(file.trim())
   })
 
@@ -79,8 +70,6 @@ describe('Formance Numscript Generator', () => {
       destination: [{ account: '@payouts:T1891G' }],
       txMeta: { test: 'Save operation' },
     })
-
-    await writeFile('tests/out/save-operation.txt', script)
 
     expect(script.trim()).toEqual(file.trim())
   })
@@ -102,8 +91,6 @@ describe('Formance Numscript Generator', () => {
       },
       accountMeta: { '@users:001': { status: 'active', tier: 'gold' } },
     })
-
-    await writeFile('tests/out/simple-transfer.txt', script)
 
     expect(script.trim()).toEqual(file.trim())
   })
@@ -131,8 +118,6 @@ describe('Formance Numscript Generator', () => {
       },
     })
 
-    await writeFile('tests/out/split-destination-with-fraction.txt', script)
-
     expect(script.trim()).toEqual(file.trim())
   })
 
@@ -159,8 +144,6 @@ describe('Formance Numscript Generator', () => {
       accountMeta: { '@merchant:5678': { region: 'NA' } },
     })
 
-    await writeFile('tests/out/split-destination-with-percentage.txt', script)
-
     expect(script.trim()).toEqual(file.trim())
   })
 
@@ -176,8 +159,6 @@ describe('Formance Numscript Generator', () => {
       destination: [{ account: '@bar' }],
       txMeta: { test: 'Transfer with unbounded overdraft' },
     })
-
-    await writeFile('tests/out/unbounded-overdraft.txt', script)
 
     expect(script.trim()).toEqual(file.trim())
   })
