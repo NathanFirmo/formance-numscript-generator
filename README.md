@@ -13,10 +13,14 @@ Since handling [Formance Numscript](https://docs.formance.com/numscript/referenc
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'COIN',
-  amount: 100,
-  source: [{ account: 'world' }],
-  destination: [{ account: 'users:001' }],
+  send: [
+    {
+      asset: 'COIN',
+      amount: 100,
+      sources: [{ account: 'world' }],
+      destinations: [{ account: 'users:001' }],
+    },
+  ],
   txMeta: {
     reference: 'TX001',
     purpose: 'reward',
@@ -42,6 +46,44 @@ set_account_meta(@users:001, "status", "active")
 set_account_meta(@users:001, "tier", "gold")
 ~~~
 
+### Multiple send
+
+#### Input
+
+~~~js
+import { generateNumscript } from 'formance-numscript-generator'
+const script = generateNumscript({
+  send: [
+    {
+      asset: 'USD/2',
+      amount: 100,
+      sources: [{ account: 'foo' }],
+      destinations: [{ account: 'bar' }],
+    },
+    {
+      asset: 'USD/2',
+      amount: 100,
+      sources: [{ account: 'bar' }],
+      destinations: [{ account: 'baz' }],
+    },
+  ],
+})
+~~~
+
+#### Output
+
+~~~kt
+send [USD/2 100] (
+  source = @foo
+  destination = @bar
+)
+
+send [USD/2 100] (
+  source = @bar
+  destination = @baz
+)
+~~~
+
 ### Transfer with multiple source accounts
 
 #### Input
@@ -49,10 +91,17 @@ set_account_meta(@users:001, "tier", "gold")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'COIN',
-  amount: 100,
-  source: [{ account: 'users:001:wallet' }, { account: 'payments:001' }],
-  destination: [{ account: 'orders:001' }],
+  send: [
+    {
+      asset: 'COIN',
+      amount: 100,
+      sources: [
+        { account: 'users:001:wallet' },
+        { account: 'payments:001' },
+      ],
+      destinations: [{ account: 'orders:001' }],
+    },
+  ],
   txMeta: { test: 'Transfer with multiple source accounts' },
   accountMeta: { 'users:001:wallet': { limit: 'high' } },
 })
@@ -81,13 +130,17 @@ set_account_meta(@users:001:wallet, "limit", "high")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'COIN',
-  amount: 100,
-  source: [
-    { account: 'users:001:wallet', maxValue: 10 },
-    { account: 'payments:001' },
+  send: [
+    {
+      asset: 'COIN',
+      amount: 100,
+      sources: [
+        { account: 'users:001:wallet', maxValue: 10 },
+        { account: 'payments:001' },
+      ],
+      destinations: [{ account: 'orders:001' }],
+    },
   ],
-  destination: [{ account: 'orders:001' }],
   txMeta: { test: 'Transfer with max allocation from specific source' },
   accountMeta: { 'users:001:wallet': { limit: 'low' } },
 })
@@ -117,10 +170,14 @@ set_account_meta(@users:001:wallet, "limit", "low")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'USD/2',
-  amount: 100,
-  source: [{ account: 'foo', overdraftLimit: 50 }],
-  destination: [{ account: 'bar' }],
+  send: [
+    {
+      asset: 'USD/2',
+      amount: 100,
+      sources: [{ account: 'foo', overdraftLimit: 50 }],
+      destinations: [{ account: 'bar' }],
+    },
+  ],
   txMeta: { test: 'Transfer with limited overdraft' },
 })
 ~~~
@@ -143,10 +200,14 @@ set_tx_meta("test", "Transfer with limited overdraft")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'USD/2',
-  amount: 100,
-  source: [{ account: 'foo', overdraftLimit: 'UNBOUNDED' }],
-  destination: [{ account: 'bar' }],
+  send: [
+    {
+      asset: 'USD/2',
+      amount: 100,
+      sources: [{ account: 'foo', overdraftLimit: 'UNBOUNDED' }],
+      destinations: [{ account: 'bar' }],
+    },
+  ],
   txMeta: { test: 'Transfer with unbounded overdraft' },
 })
 ~~~
@@ -169,15 +230,19 @@ set_tx_meta("test", "Transfer with unbounded overdraft")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'COIN',
-  amount: 99,
-  source: [{ account: 'world' }],
-  destination: [
-    { account: 'a', fraction: '1/5' },
-    { account: 'b', fraction: '1/5' },
-    { account: 'c', fraction: '1/5' },
-    { account: 'd', fraction: '1/5' },
-    { account: 'e', fraction: '1/5' },
+  send: [
+    {
+      asset: 'COIN',
+      amount: 99,
+      sources: [{ account: 'world' }],
+      destinations: [
+        { account: 'a', fraction: '1/5' },
+        { account: 'b', fraction: '1/5' },
+        { account: 'c', fraction: '1/5' },
+        { account: 'd', fraction: '1/5' },
+        { account: 'e', fraction: '1/5' },
+      ],
+    },
   ],
   txMeta: {
     test: 'Transfer to multiple destinations with equal fractions',
@@ -209,12 +274,16 @@ set_tx_meta("test", "Transfer to multiple destinations with equal fractions")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'USD/2',
-  amount: 'ALL_AVAILABLE',
-  source: [{ account: 'order:1234' }],
-  destination: [
-    { account: 'platform:fees', fraction: '10%' },
-    { account: 'merchant:5678', remainder: true },
+  send: [
+    {
+      asset: 'USD/2',
+      amount: 'ALL_AVAILABLE',
+      sources: [{ account: 'order:1234' }],
+      destinations: [
+        { account: 'platform:fees', fraction: '10%' },
+        { account: 'merchant:5678', remainder: true },
+      ],
+    },
   ],
   txMeta: {
     reference: 'TX002',
@@ -250,11 +319,15 @@ set_account_meta(@merchant:5678, "region", "NA")
 ~~~js
 import { generateNumscript } from 'formance-numscript-generator'
 const script = generateNumscript({
-  asset: 'USD/2',
-  amount: 100,
+  send: [
+    {
+      asset: 'USD/2',
+      amount: 100,
+      sources: [{ account: 'merchants:1234' }],
+      destinations: [{ account: 'payouts:T1891G' }],
+    },
+  ],
   save: [{ asset: 'USD/2', amount: 100, account: 'merchants:1234' }],
-  source: [{ account: 'merchants:1234' }],
-  destination: [{ account: 'payouts:T1891G' }],
   txMeta: { test: 'Save operation' },
 })
 ~~~
