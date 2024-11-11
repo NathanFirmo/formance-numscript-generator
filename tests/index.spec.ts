@@ -133,7 +133,7 @@ describe('Formance Numscript Generator', () => {
       amount: 'ALL_AVAILABLE',
       source: [{ account: '@order:1234' }],
       destination: [
-        { account: '@platform:fees', percentage: 10 },
+        { account: '@platform:fees', fraction: '10%' },
         { account: '@merchant:5678', remainder: true },
       ],
       txMeta: {

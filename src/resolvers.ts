@@ -42,7 +42,6 @@ export const resolveDestination = (tx: Transaction) => {
 
   return `{\n    ${tx.destination
     .map((dest) => {
-      if (dest.percentage) return `${dest.percentage}% to ${dest.account}`
       if (dest.fraction) return `${dest.fraction} to ${dest.account}`
       if (dest.remainder) return `remaining to ${dest.account}`
       return `to ${dest.account}`

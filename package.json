@@ -1,7 +1,7 @@
 {
   "name": "formance-numscript-generator",
   "version": "0.0.3",
-  "description": "Numscrip generator for Formance open source ledger",
+  "description": "Numscript generator for Formance open source ledger",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "jest",

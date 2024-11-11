@@ -20,7 +20,6 @@ export interface Transaction {
 
 export interface Destination {
   account: string | Destination
-  percentage?: number
   fraction?: string
   remainder?: boolean
 }
