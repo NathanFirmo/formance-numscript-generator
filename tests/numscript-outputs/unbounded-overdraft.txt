@@ -1,0 +1,6 @@
+send [USD/2 100] (
+  source = @foo allowing unbounded overdraft
+  destination = @bar
+)
+
+set_tx_meta("test", "Transfer with unbounded overdraft")

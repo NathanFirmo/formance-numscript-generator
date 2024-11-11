@@ -1,0 +1,37 @@
+{
+  "name": "formance-numscript-generator",
+  "version": "0.0.1",
+  "description": "Numscrip generator for Formance open source ledger",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "tsc --declaration",
+    "release:patch": "HUSKY=0 npm version patch -m 'chore: release version %s' && git push --follow-tags",
+    "release:minor": "HUSKY=0 npm version minor -m 'chore: release version %s' && git push --follow-tags",
+    "release:major": "HUSKY=0 npm version major -m 'chore: release version %s' && git push --follow-tags",
+    "prepare": "husky"
+  },
+  "author": "NathanFirmo",
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathanFirmo/formance-numscript-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NathanFirmo/formance-numscript-generator/issues"
+  },
+  "homepage": "https://github.com/NathanFirmo/formance-numscript-generator#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@types/jest": "^29.5.14",
+    "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

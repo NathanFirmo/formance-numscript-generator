@@ -1,0 +1,13 @@
+send [USD/2 *] (
+  source = @order:1234
+  destination = {
+    10% to @platform:fees
+    remaining to @merchant:5678
+  }
+)
+
+set_tx_meta("reference", "TX002")
+set_tx_meta("purpose", "orderPayment")
+set_tx_meta("test", "Split transfer with percentage and remainder")
+
+set_account_meta(@merchant:5678, "region", "NA")

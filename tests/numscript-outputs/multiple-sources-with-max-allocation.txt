@@ -1,0 +1,11 @@
+send [COIN 100] (
+  source = {
+    max [COIN 10] from @users:001:wallet
+    @payments:001
+  }
+  destination = @orders:001
+)
+
+set_tx_meta("test", "Transfer with max allocation from specific source")
+
+set_account_meta(@users:001:wallet, "limit", "low")

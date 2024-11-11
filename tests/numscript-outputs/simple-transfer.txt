@@ -1,0 +1,11 @@
+send [COIN 100] (
+  source = @world
+  destination = @users:001
+)
+
+set_tx_meta("reference", "TX001")
+set_tx_meta("purpose", "reward")
+set_tx_meta("test", "Simple transfer")
+
+set_account_meta(@users:001, "status", "active")
+set_account_meta(@users:001, "tier", "gold")

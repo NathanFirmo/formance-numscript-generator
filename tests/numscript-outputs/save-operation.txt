@@ -1,0 +1,8 @@
+save [USD/2 100] from @merchants:1234
+
+send [USD/2 100] (
+  source = @merchants:1234
+  destination = @payouts:T1891G
+)
+
+set_tx_meta("test", "Save operation")

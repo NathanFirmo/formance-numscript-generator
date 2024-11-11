@@ -1,0 +1,12 @@
+send [COIN 99] (
+  source = @world
+  destination = {
+    1/5 to @a
+    1/5 to @b
+    1/5 to @c
+    1/5 to @d
+    1/5 to @e
+  }
+)
+
+set_tx_meta("test", "Transfer to multiple destinations with equal fractions")
