@@ -30,16 +30,16 @@ const script = generateNumscript({
 
 ~~~kt
 send [COIN 100] (
-  source = world
-  destination = users:001
+  source = @world
+  destination = @users:001
 )
 
 set_tx_meta("reference", "TX001")
 set_tx_meta("purpose", "reward")
 set_tx_meta("test", "Simple transfer")
 
-set_account_meta(users:001, "status", "active")
-set_account_meta(users:001, "tier", "gold")
+set_account_meta(@users:001, "status", "active")
+set_account_meta(@users:001, "tier", "gold")
 ~~~
 
 ### Transfer with multiple source accounts
@@ -63,15 +63,15 @@ const script = generateNumscript({
 ~~~kt
 send [COIN 100] (
   source = {
-    users:001:wallet
-    payments:001
+    @users:001:wallet
+    @payments:001
   }
-  destination = orders:001
+  destination = @orders:001
 )
 
 set_tx_meta("test", "Transfer with multiple source accounts")
 
-set_account_meta(users:001:wallet, "limit", "high")
+set_account_meta(@users:001:wallet, "limit", "high")
 ~~~
 
 ### Transfer with max allocation from specific source
@@ -98,15 +98,15 @@ const script = generateNumscript({
 ~~~kt
 send [COIN 100] (
   source = {
-    max [COIN 10] from users:001:wallet
-    payments:001
+    max [COIN 10] from @users:001:wallet
+    @payments:001
   }
   destination = orders:001
 )
 
 set_tx_meta("test", "Transfer with max allocation from specific source")
 
-set_account_meta(users:001:wallet, "limit", "low")
+set_account_meta(@users:001:wallet, "limit", "low")
 ~~~
 
 
@@ -129,8 +129,8 @@ const script = generateNumscript({
 
 ~~~kt
 send [USD/2 100] (
-  source = foo allowing overdraft up to [USD/2 50]
-  destination = bar
+  source = @foo allowing overdraft up to [USD/2 50]
+  destination = @bar
 )
 
 set_tx_meta("test", "Transfer with limited overdraft")
@@ -155,8 +155,8 @@ const script = generateNumscript({
 
 ~~~kt
 send [USD/2 100] (
-  source = foo allowing unbounded overdraft
-  destination = bar
+  source = @foo allowing unbounded overdraft
+  destination = @bar
 )
 
 set_tx_meta("test", "Transfer with unbounded overdraft")
@@ -189,13 +189,13 @@ const script = generateNumscript({
 
 ~~~kt
 send [COIN 99] (
-  source = world
+  source = @world
   destination = {
-    1/5 to a
-    1/5 to b
-    1/5 to c
-    1/5 to d
-    1/5 to e
+    1/5 to @a
+    1/5 to @b
+    1/5 to @c
+    1/5 to @d
+    1/5 to @e
   }
 )
 
@@ -229,10 +229,10 @@ const script = generateNumscript({
 
 ~~~kt
 send [USD/2 *] (
-  source = order:1234
+  source = @order:1234
   destination = {
-    10% to platform:fees
-    remaining to merchant:5678
+    10% to @platform:fees
+    remaining to @merchant:5678
   }
 )
 
@@ -240,7 +240,7 @@ set_tx_meta("reference", "TX002")
 set_tx_meta("purpose", "orderPayment")
 set_tx_meta("test", "Split transfer with percentage and remainder")
 
-set_account_meta(merchant:5678, "region", "NA")
+set_account_meta(@merchant:5678, "region", "NA")
 ~~~
 
 ### Save statement
@@ -262,11 +262,11 @@ const script = generateNumscript({
 #### Output
 
 ~~~kt
-save [USD/2 100] from merchants:1234
+save [USD/2 100] from @merchants:1234
 
 send [USD/2 100] (
-  source = merchants:1234
-  destination = payouts:T1891G
+  source = @merchants:1234
+  destination = @payouts:T1891G
 )
 
 set_tx_meta("test", "Save operation")
