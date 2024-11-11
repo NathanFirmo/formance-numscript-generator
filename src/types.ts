@@ -1,14 +1,5 @@
 export interface NumscriptTransaction {
-  asset: string
-  amount: number | 'ALL_AVAILABLE'
-  source: Array<{
-    account: string
-    maxValue?: number
-    fraction?: string
-    overdraftLimit?: number | 'UNBOUNDED'
-    remainder?: boolean
-  }>
-  destination: Array<Destination>
+  send: Array<Send>
   save?: Array<{
     asset: string
     amount: number
@@ -16,6 +7,21 @@ export interface NumscriptTransaction {
   }>
   txMeta?: Record<string, string>
   accountMeta?: Record<string, Record<string, string>>
+}
+
+export interface Send {
+  asset: string
+  amount: number | 'ALL_AVAILABLE'
+  sources: Array<Source>
+  destinations: Array<Destination>
+}
+
+export interface Source {
+  account: string
+  maxValue?: number
+  fraction?: string
+  overdraftLimit?: number | 'UNBOUNDED'
+  remainder?: boolean
 }
 
 export interface Destination {

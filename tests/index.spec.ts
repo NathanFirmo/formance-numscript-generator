@@ -8,10 +8,14 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'USD/2',
-      amount: 100,
-      source: [{ account: 'foo', overdraftLimit: 50 }],
-      destination: [{ account: 'bar' }],
+      send: [
+        {
+          asset: 'USD/2',
+          amount: 100,
+          sources: [{ account: 'foo', overdraftLimit: 50 }],
+          destinations: [{ account: 'bar' }],
+        },
+      ],
       txMeta: { test: 'Transfer with limited overdraft' },
     })
 
@@ -26,13 +30,17 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'COIN',
-      amount: 100,
-      source: [
-        { account: 'users:001:wallet', maxValue: 10 },
-        { account: 'payments:001' },
+      send: [
+        {
+          asset: 'COIN',
+          amount: 100,
+          sources: [
+            { account: 'users:001:wallet', maxValue: 10 },
+            { account: 'payments:001' },
+          ],
+          destinations: [{ account: 'orders:001' }],
+        },
       ],
-      destination: [{ account: 'orders:001' }],
       txMeta: { test: 'Transfer with max allocation from specific source' },
       accountMeta: { 'users:001:wallet': { limit: 'low' } },
     })
@@ -46,10 +54,17 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'COIN',
-      amount: 100,
-      source: [{ account: 'users:001:wallet' }, { account: 'payments:001' }],
-      destination: [{ account: 'orders:001' }],
+      send: [
+        {
+          asset: 'COIN',
+          amount: 100,
+          sources: [
+            { account: 'users:001:wallet' },
+            { account: 'payments:001' },
+          ],
+          destinations: [{ account: 'orders:001' }],
+        },
+      ],
       txMeta: { test: 'Transfer with multiple source accounts' },
       accountMeta: { 'users:001:wallet': { limit: 'high' } },
     })
@@ -63,11 +78,15 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'USD/2',
-      amount: 100,
+      send: [
+        {
+          asset: 'USD/2',
+          amount: 100,
+          sources: [{ account: 'merchants:1234' }],
+          destinations: [{ account: 'payouts:T1891G' }],
+        },
+      ],
       save: [{ asset: 'USD/2', amount: 100, account: 'merchants:1234' }],
-      source: [{ account: 'merchants:1234' }],
-      destination: [{ account: 'payouts:T1891G' }],
       txMeta: { test: 'Save operation' },
     })
 
@@ -80,16 +99,45 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'COIN',
-      amount: 100,
-      source: [{ account: 'world' }],
-      destination: [{ account: 'users:001' }],
+      send: [
+        {
+          asset: 'COIN',
+          amount: 100,
+          sources: [{ account: 'world' }],
+          destinations: [{ account: 'users:001' }],
+        },
+      ],
       txMeta: {
         reference: 'TX001',
         purpose: 'reward',
         test: 'Simple transfer',
       },
       accountMeta: { 'users:001': { status: 'active', tier: 'gold' } },
+    })
+
+    expect(script.trim()).toEqual(file.trim())
+  })
+
+  test('Multiple send', async () => {
+    const file = Buffer.from(
+      await readFile('./tests/numscript-outputs/multiple-send.txt')
+    ).toString()
+
+    const script = generateNumscript({
+      send: [
+        {
+          asset: 'USD/2',
+          amount: 100,
+          sources: [{ account: 'foo' }],
+          destinations: [{ account: 'bar' }],
+        },
+        {
+          asset: 'USD/2',
+          amount: 100,
+          sources: [{ account: 'bar' }],
+          destinations: [{ account: 'baz' }],
+        },
+      ],
     })
 
     expect(script.trim()).toEqual(file.trim())
@@ -103,15 +151,19 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'COIN',
-      amount: 99,
-      source: [{ account: 'world' }],
-      destination: [
-        { account: 'a', fraction: '1/5' },
-        { account: 'b', fraction: '1/5' },
-        { account: 'c', fraction: '1/5' },
-        { account: 'd', fraction: '1/5' },
-        { account: 'e', fraction: '1/5' },
+      send: [
+        {
+          asset: 'COIN',
+          amount: 99,
+          sources: [{ account: 'world' }],
+          destinations: [
+            { account: 'a', fraction: '1/5' },
+            { account: 'b', fraction: '1/5' },
+            { account: 'c', fraction: '1/5' },
+            { account: 'd', fraction: '1/5' },
+            { account: 'e', fraction: '1/5' },
+          ],
+        },
       ],
       txMeta: {
         test: 'Transfer to multiple destinations with equal fractions',
@@ -129,12 +181,16 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'USD/2',
-      amount: 'ALL_AVAILABLE',
-      source: [{ account: 'order:1234' }],
-      destination: [
-        { account: 'platform:fees', fraction: '10%' },
-        { account: 'merchant:5678', remainder: true },
+      send: [
+        {
+          asset: 'USD/2',
+          amount: 'ALL_AVAILABLE',
+          sources: [{ account: 'order:1234' }],
+          destinations: [
+            { account: 'platform:fees', fraction: '10%' },
+            { account: 'merchant:5678', remainder: true },
+          ],
+        },
       ],
       txMeta: {
         reference: 'TX002',
@@ -153,10 +209,14 @@ describe('Formance Numscript Generator', () => {
     ).toString()
 
     const script = generateNumscript({
-      asset: 'USD/2',
-      amount: 100,
-      source: [{ account: 'foo', overdraftLimit: 'UNBOUNDED' }],
-      destination: [{ account: 'bar' }],
+      send: [
+        {
+          asset: 'USD/2',
+          amount: 100,
+          sources: [{ account: 'foo', overdraftLimit: 'UNBOUNDED' }],
+          destinations: [{ account: 'bar' }],
+        },
+      ],
       txMeta: { test: 'Transfer with unbounded overdraft' },
     })
 

@@ -8,15 +8,15 @@ import {
 import { NumscriptTransaction } from './types'
 export { NumscriptTransaction } from './types'
 
-export const generateNumscript = (tx: NumscriptTransaction) => {
-  const amount = `${tx.asset} ${tx.amount === 'ALL_AVAILABLE' ? '*' : tx.amount}`
-
-  return [
+export const generateNumscript = (tx: NumscriptTransaction) =>
+  [
     resolveSaveStatement(tx),
-    `send [${amount}] (\n  source = ${resolveSource(tx)}\n  destination = ${resolveDestination(tx)}\n)`,
+    ...tx.send.map(
+      (s) =>
+        `send [${s.asset} ${s.amount === 'ALL_AVAILABLE' ? '*' : s.amount}] (\n  source = ${resolveSource(s)}\n  destination = ${resolveDestination(s)}\n)`
+    ),
     resolveTxMeta(tx),
     resolveAccountMeta(tx),
   ]
     .filter(Boolean)
     .join('\n\n')
-}

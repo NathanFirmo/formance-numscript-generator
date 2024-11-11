@@ -1,9 +1,6 @@
-import { NumscriptTransaction } from './types'
+import { NumscriptTransaction, Send, Source } from './types'
 
-export const formatAccount = (
-  source: NumscriptTransaction['source'][0],
-  asset: string
-) => {
+export const formatAccount = (source: Source, asset: string) => {
   if (source.maxValue !== undefined) {
     return `max [${asset} ${source.maxValue}] from @${source.account}`
   }
@@ -27,20 +24,20 @@ export const formatAccount = (
   return `@${source.account}`
 }
 
-export const resolveSource = (tx: NumscriptTransaction) => {
-  if (tx.source.length === 1) {
-    return formatAccount(tx.source[0], tx.asset)
+export const resolveSource = (tx: NumscriptTransaction['send'][0]) => {
+  if (tx.sources.length === 1) {
+    return formatAccount(tx.sources[0], tx.asset)
   }
 
-  return `{\n ${tx.source.map((s) => '   ' + formatAccount(s, tx.asset)).join('\n ')}\n  }`
+  return `{\n ${tx.sources.map((s) => '   ' + formatAccount(s, tx.asset)).join('\n ')}\n  }`
 }
 
-export const resolveDestination = (tx: NumscriptTransaction) => {
-  if (tx.destination.length === 1) {
-    return `@${tx.destination[0].account}`
+export const resolveDestination = (send: Send) => {
+  if (send.destinations.length === 1) {
+    return `@${send.destinations[0].account}`
   }
 
-  return `{\n    ${tx.destination
+  return `{\n    ${send.destinations
     .map((dest) => {
       if (dest.fraction) return `${dest.fraction} to @${dest.account}`
       if (dest.remainder) return `remaining to @${dest.account}`
